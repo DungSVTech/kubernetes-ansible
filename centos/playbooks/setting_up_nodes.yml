@@ -22,12 +22,14 @@
       gpgkey=https://packages.cloud.google.com/yum/doc/yum-key.gpg
         https://packages.cloud.google.com/yum/doc/rpm-package-key.gpg
 
-  - name: Installing Docker and firewalld
+  - name: Installing Containerd and turn off firewalld
     shell: |
-     yum install firewalld -y
-     yum install -y yum-utils device-mapper-persistent-data lvm2
+     systemctl disable firewalld --now
      yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
-     yum install docker-ce -y --nobest
+     yum install -y yum-utils device-mapper-persistent-data lvm2
+     yum install -y containerd.io
+     rm -I /etc/containerd/config.toml
+     systemctl enable containerd --now
 
   - name: Installing required packages
     yum:
